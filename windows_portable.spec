@@ -33,4 +33,6 @@ a = Analysis([str(ROOT / "app.py")], pathex=[str(ROOT)], binaries=binaries,
              datas=datas, hiddenimports=hiddenimports, noarchive=False)
 pyz = PYZ(a.pure)
 exe = EXE(pyz, a.scripts, a.binaries, a.zipfiles, a.datas,
-          name="JeongSoyoonAI", console=False)
+          name="JeongSoyoonAI", console=False, exclude_binaries=True)
+coll = COLLECT(exe, a.binaries, a.zipfiles, a.datas,
+               name="JeongSoyoonAI")

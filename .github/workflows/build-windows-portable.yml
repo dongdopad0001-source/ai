@@ -19,7 +19,7 @@ jobs:
       - name: Smoke-test portable executable
         shell: pwsh
         run: |
-          $process = Start-Process -FilePath "$PWD/dist/JeongSoyoonAI.exe" -PassThru
+          $process = Start-Process -FilePath "$PWD/dist/JeongSoyoonAI/JeongSoyoonAI.exe" -PassThru
           try {
             $deadline = (Get-Date).AddMinutes(2)
             $healthy = $false
@@ -37,6 +37,7 @@ jobs:
                   }
                   Write-Host "Streamlit root response: HTTP $($page.StatusCode), content-type=$($page.Headers['Content-Type'])"
                   Write-Host "Streamlit root response preview: $($page.Content.Substring(0, [Math]::Min(300, $page.Content.Length)))"
+                  Start-Sleep -Seconds 2
                 }
               } catch {
                 Write-Host "Waiting for Streamlit UI: $($_.Exception.Message)"
@@ -54,5 +55,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: JeongSoyoonAI-Windows
-          path: dist/JeongSoyoonAI.exe
+          path: dist/JeongSoyoonAI
           if-no-files-found: error

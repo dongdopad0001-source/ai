@@ -12,5 +12,5 @@ $env:PLAYWRIGHT_BROWSERS_PATH = $browserDirectory
 & $Python -m playwright install chromium
 Remove-Item -Recurse -Force build, dist -ErrorAction SilentlyContinue
 & $Python -m PyInstaller --noconfirm --clean windows_portable.spec
-if (-not (Test-Path "dist/JeongSoyoonAI.exe")) { throw "EXE was not created." }
-Write-Host "Build complete: $repoRoot/dist/JeongSoyoonAI.exe"
+if (-not (Test-Path "dist/JeongSoyoonAI/JeongSoyoonAI.exe")) { throw "EXE was not created." }
+Write-Host "Build complete: $repoRoot/dist/JeongSoyoonAI/JeongSoyoonAI.exe"
