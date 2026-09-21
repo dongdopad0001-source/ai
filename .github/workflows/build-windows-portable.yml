@@ -27,12 +27,16 @@ jobs:
               try {
                 $response = Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8501/_stcore/health
                 if ($response.StatusCode -eq 200) {
-                  $page = Invoke-WebRequest -UseBasicParsing http://127.0.0.1:8501/
+                  # Do not throw on 404 here: print the response diagnostics so a
+                  # packaging failure is actionable in the Actions log.
+                  $page = Invoke-WebRequest -UseBasicParsing -SkipHttpErrorCheck http://127.0.0.1:8501/
                   if ($page.StatusCode -eq 200 -and $page.Content -match "<html") {
                     Write-Host "Portable EXE and Streamlit UI started successfully."
                     $healthy = $true
                     break
                   }
+                  Write-Host "Streamlit root response: HTTP $($page.StatusCode), content-type=$($page.Headers['Content-Type'])"
+                  Write-Host "Streamlit root response preview: $($page.Content.Substring(0, [Math]::Min(300, $page.Content.Length)))"
                 }
               } catch {
                 Write-Host "Waiting for Streamlit UI: $($_.Exception.Message)"
