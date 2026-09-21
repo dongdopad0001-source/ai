@@ -1,7 +1,7 @@
 # -*- mode: python ; coding: utf-8 -*-
 """PyInstaller recipe for the self-contained Windows distribution."""
 from pathlib import Path
-from PyInstaller.utils.hooks import collect_all
+from PyInstaller.utils.hooks import collect_all, get_module_file_attribute
 
 ROOT = Path(SPECPATH)
 datas = [(str(ROOT / "main.py"), ".")]
@@ -15,6 +15,14 @@ for package in (
     datas += package_datas
     binaries += package_binaries
     hiddenimports += package_hiddenimports
+
+# Streamlit serves its UI from this directory.  Keep it explicit as well as
+# collect_all: without these HTML/JS assets the health endpoint can be ready
+# while the browser receives only a 404/"Not Found" response at `/`.
+streamlit_static_dir = Path(get_module_file_attribute("streamlit")).parent / "static"
+if not (streamlit_static_dir / "index.html").is_file():
+    raise SystemExit(f"Streamlit UI assets were not found: {streamlit_static_dir}")
+datas.append((str(streamlit_static_dir), "streamlit/static"))
 
 browser_dir = ROOT / "playwright-browsers"
 if not browser_dir.is_dir():

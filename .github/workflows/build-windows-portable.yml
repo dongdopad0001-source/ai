@@ -35,6 +35,7 @@ jobs:
                   }
                 }
               } catch {
+                Write-Host "Waiting for Streamlit UI: $($_.Exception.Message)"
                 Start-Sleep -Seconds 2
               }
             } while ((Get-Date) -lt $deadline)
